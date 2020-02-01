@@ -10,6 +10,8 @@ jobs:
       - restore_cache:
           keys:
             - disaster-jars-v1-{{ checksum "project.clj" }}
+      # Keep build artifacts between jobs
+      # This is kinda bad attaching the workspace to just /target, but it'll sit for now.
       - attach_workspace:
           at: /home/circleci/disaster/target
       - run:
@@ -53,15 +55,10 @@ jobs:
           keys:
             - disaster-jars-v1-{{ checksum "project.clj" }}
             - disaster-machine-jars-v1
+      # Keep build artifacts between jobs
+      # This is kinda bad attaching the workspace to just /target, but it'll sit for now.
       - attach_workspace:
           at: /home/circleci/disaster/target
-      - run:
-          name: Get current directory
-          command: pwd
-      - run:
-          name: Get current directory
-          command: ls
-          working_directory: /home/circleci/disaster
       - run:
           name: Authenticate with Google Cloud
           command: |
