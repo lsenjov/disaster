@@ -20,6 +20,10 @@ jobs:
           name: Run server tests
           command: lein test
           working_directory: /home/circleci/disaster
+      - run:
+          name: Build uberjar
+          command: lein uberjar
+          working_directory: /home/circleci/disaster
       - save_cache:
           key: disaster-jars-v1-{{ checksum "project.clj" }}
           paths:
