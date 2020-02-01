@@ -1,0 +1,70 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: clojure:alpine
+    working_directory: /home/circleci/disaster
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - disaster-jars-v1-{{ checksum "project.clj" }}
+
+      - run:
+          name: Download dependencies
+          command: lein deps
+          working_directory: /home/circleci/disaster
+
+      - run:
+          name: Run server tests
+          command: lein test
+          working_directory: /home/circleci/disaster
+      - save_cache:
+          key: disaster-jars-v1-{{ checksum "project.clj" }}
+          paths:
+            - /home/circleci/.m2
+
+  deploy:
+    filters:
+      branches:
+        only:
+          - master
+    docker:
+      - image: google/cloud-sdk:alpine
+    working_directory: /home/circleci/disaster
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - disaster-jars-v1-{{ checksum "project.clj" }}
+            - disaster-machine-jars-v1
+
+      - run:
+          name: Authenticate with Google Cloud
+          command: |
+            echo $GCLOUD_KEY_JSON > /home/circleci/.gcloud-key
+            gcloud auth activate-service-account --key-file=/home/circleci/.gcloud-key
+      - run:
+          name: Deploy disaster to Google App Engine
+          command: |
+            gcloud config set project clojure-sample-project
+            gcloud app deploy
+      - run:
+          name: discarding all changes
+          command: git checkout -- .
+
+      - save_cache:
+          key: disaster-jars-v1-{{ checksum "project.clj" }}
+          paths:
+            - /home/circleci/.m2
+
+workflows:
+  version: 2
+  build-and-deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
