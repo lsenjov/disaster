@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Deploy disaster to Google App Engine
           command: |
-            gcloud config set project clojure-sample-project
+            gcloud config set project disaster-266910
             gcloud app deploy
       - run:
           name: discarding all changes
