@@ -48,6 +48,7 @@ jobs:
       - run:
           name: Get target details
           command: ls ./target
+          working_directory: /home/circleci/disaster
       - run:
           name: Authenticate with Google Cloud
           command: |
@@ -58,6 +59,7 @@ jobs:
           command: |
             gcloud config set project disaster-266910
             gcloud app deploy
+          working_directory: /home/circleci/disaster
       - run:
           name: discarding all changes
           command: git checkout -- .
