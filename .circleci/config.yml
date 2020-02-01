@@ -46,6 +46,9 @@ jobs:
             - disaster-machine-jars-v1
 
       - run:
+          name: Get current directory
+          command: pwd
+      - run:
           name: Get target details
           command: ls ./target
           working_directory: /home/circleci/disaster
