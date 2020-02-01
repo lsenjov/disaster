@@ -14,16 +14,17 @@ jobs:
       - run:
           name: Download dependencies
           command: lein deps
-          working_directory: /home/circleci/disaster
-
       - run:
           name: Run server tests
           command: lein test
-          working_directory: /home/circleci/disaster
       - run:
           name: Build uberjar
           command: lein uberjar
-          working_directory: /home/circleci/disaster
+      - persist_to_workspace:
+          name: Persist target dir
+          root: /home/circleci/disaster/
+          paths:
+            - target/uberjar
       - save_cache:
           key: disaster-jars-v1-{{ checksum "project.clj" }}
           paths:
@@ -44,14 +45,12 @@ jobs:
           keys:
             - disaster-jars-v1-{{ checksum "project.clj" }}
             - disaster-machine-jars-v1
-
       - run:
           name: Get current directory
           command: pwd
       - run:
-          name: Get target details
-          command: ls ./target
-          working_directory: /home/circleci/disaster
+          name: Get current directory
+          command: ls
       - run:
           name: Authenticate with Google Cloud
           command: |
@@ -62,7 +61,6 @@ jobs:
           command: |
             gcloud config set project disaster-266910
             gcloud app deploy
-          working_directory: /home/circleci/disaster
       - run:
           name: discarding all changes
           command: git checkout -- .
