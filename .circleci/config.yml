@@ -10,12 +10,16 @@ jobs:
       - restore_cache:
           keys:
             - disaster-jars-v1-{{ checksum "project.clj" }}
-
+      - attach_workspace:
+          at: /home/circleci/disaster/target
+      - run:
+          name: Get current directory
+          command: ls /home/circleci/disaster/target
+          working_directory: /home/circleci/disaster
       - run:
           name: Download dependencies
           command: lein deps
           working_directory: /home/circleci/disaster
-
       - run:
           name: Run server tests
           command: lein test
@@ -26,9 +30,9 @@ jobs:
           working_directory: /home/circleci/disaster
       - persist_to_workspace:
           name: Persist target dir
-          root: /home/circleci/disaster/
+          root: /home/circleci/disaster/target
           paths:
-            - target/uberjar
+            - uberjar
       - save_cache:
           key: disaster-jars-v1-{{ checksum "project.clj" }}
           paths:
@@ -49,7 +53,8 @@ jobs:
           keys:
             - disaster-jars-v1-{{ checksum "project.clj" }}
             - disaster-machine-jars-v1
-
+      - attach_workspace:
+          at: /home/circleci/disaster/target
       - run:
           name: Get current directory
           command: pwd
