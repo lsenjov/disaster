@@ -31,7 +31,7 @@ jobs:
         only:
           - master
     docker:
-      - image: google/cloud-sdk:alpine
+      - image: clojure:alpine
     working_directory: /home/circleci/disaster
     steps:
       - checkout
