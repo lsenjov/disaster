@@ -9,6 +9,8 @@
                  [buddy/buddy-sign "3.1.0"]
                  [ch.qos.logback/logback-classic "1.2.3"]
                  [cheshire "5.9.0"]
+                 [clj-http "3.10.0"]
+                 [clj-oauth "1.5.5"]
                  [cljs-ajax "0.8.0"]
                  [clojure.java-time "0.3.2"]
                  [com.cognitect/transit-clj "0.8.319"]
@@ -26,6 +28,7 @@
                  [metosin/spec-tools "0.10.1"]
                  [mount "0.1.16"]
                  [nrepl "0.6.0"]
+                 [org.clojure/algo.generic "0.1.3"]
                  [org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.597" :scope "provided"]
                  [org.clojure/tools.cli "0.4.2"]
@@ -35,10 +38,15 @@
                  [org.webjars/webjars-locator "0.38"]
                  [re-frame "0.11.0"]
                  [reagent "0.9.1"]
+                 [ring-oauth2 "0.1.4"]
                  [ring-webjars "0.2.0"]
                  [ring/ring-core "1.8.0"]
                  [ring/ring-defaults "0.3.2"]
-                 [selmer "1.12.18"]]
+                 [selmer "1.12.18"]
+                 
+                 ;; JWT deps
+                 [invetica/uri "0.5.0"]
+                 ]
 
   :min-lein-version "2.0.0"
   
