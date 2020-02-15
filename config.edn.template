@@ -1,0 +1,22 @@
+;; Copy to either dev-config.edn or test-config.edn
+{:dev true
+ :port 3000
+ ;; when :nrepl-port is set the application starts the nREPL server on load
+ :nrepl-port 7000
+
+ :oauth2
+ {:google
+  {:authorize-uri    "https://accounts.google.com/o/oauth2/v2/auth"
+   :access-token-uri "https://oauth2.googleapis.com/token"
+   :client-id        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx.apps.googleusercontent.com"
+   :client-secret    "xxxxxxxxxxxxxxxxxxxxxxxx"
+   :scopes           ["profile" "email" "openid"]
+   :launch-uri       "/oauth2/google"
+   :redirect-uri     "/oauth2/google/callback"
+   :landing-uri      "/"
+   :userinfo-uri     "https://openidconnect.googleapis.com/v1/userinfo"
+   :openid-uri       "https://accounts.google.com/.well-known/openid-configuration"
+   :jwks-uri         "https://www.googleapis.com/oauth2/v3/certs"
+   }
+  }
+ }
