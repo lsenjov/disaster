@@ -46,11 +46,12 @@
                  [selmer "1.12.18"]
 
                  ;; Nested deps
+                 [org.apache.httpcomponents/httpclient "4.5.10"]
+                 [org.apache.httpcomponents/httpcore "4.4.12"]
+                 [com.google.guava/guava "28.2-jre"]
+                 [com.fasterxml.jackson.core/jackson-annotations "2.10.0"]
                  [com.fasterxml.jackson.core/jackson-core "2.10.1"]
                  [com.fasterxml.jackson.core/jackson-databind "2.10.0"]
-                 [com.fasterxml.jackson.core/jackson-annotations "2.10.0"]
-                 [org.apache.httpcomponents/httpcore "4.4.12"]
-                 [org.apache.httpcomponents/httpclient "4.5.10"]
                  [org.slf4j/slf4j-api "1.7.29"]
                  [args4j "2.33"]
                  [borkdude/edamame "0.0.7"]
