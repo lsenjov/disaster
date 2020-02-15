@@ -2,6 +2,7 @@
   "For getting config details from gcloud secret manager"
   (:require
     [clojure.tools.logging :as log]
+    [clojure.core.async :as async]
     [clojure.edn]
     [cprop.tools])
   (:import
@@ -14,12 +15,15 @@
 ;; So, I have no idea _why_, but if we do a with-open on this exact thing,
 ;; it fails due to being unable to schedule something in the thread pool
 ;; So we initialise it and just kinda... let it run free?
-(def client
-  (try (SecretManagerServiceClient/create)
-       (catch Exception e
-         (do
-           (log/error "Could not create secret client:" e)
-           nil))))
+(defn create-client
+  []
+  (try
+    (SecretManagerServiceClient/create)
+    ;; Likely to fail because of inability to get credentials in test environ
+    (catch Exception e
+      (do
+        (log/error "Could not create secret client:" e)
+        nil))))
 
 (defn fetch-secret
   "Given a secret version name string, returns the value"
@@ -57,7 +61,12 @@
 (defn get-all-config-secrets
   "Gets a list of all config secrets in a map. Throws an exception if it something fails"
   ([]
-   (get-all-config-secrets client))
+   (if-let [client (create-client)]
+     (let [ret (get-all-config-secrets client)]
+       ;; Problem is we're closing things too early. Close it in 3 seconds time and ignore it in the meantime
+       (async/go (Thread/sleep 3000) (.close client))
+       ;; Actually return the response
+       ret)))
   ([client]
    ;; If we don't let it sleep a moment, it fails because the library needs to extract its own library
    ;; But it doesn't have a "oh yeah I'll wait a fucking moment and tell you when it's done"
