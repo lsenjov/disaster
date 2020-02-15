@@ -46,6 +46,12 @@
                  
                  ;; JWT deps
                  [invetica/uri "0.5.0"]
+
+                 ;; GCP Deps
+                 [com.google.cloud/google-cloud-secretmanager "0.2.1" :exclusions [io.grpc/grpc-api io.grpc/grpc-core io.grpc/grpc-netty-shaded]]
+                 [io.grpc/grpc-core "1.27.0" :exclusions [io.grpc/grpc-api]]
+                 [io.grpc/grpc-api "1.27.0"]
+                 [io.grpc/grpc-netty-shaded "1.27.0" :exclusions [io.grpc/grpc-api io.grpc/grpc-core]]
                  ]
 
   :min-lein-version "2.0.0"
