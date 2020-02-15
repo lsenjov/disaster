@@ -14,7 +14,12 @@
 ;; So, I have no idea _why_, but if we do a with-open on this exact thing,
 ;; it fails due to being unable to schedule something in the thread pool
 ;; So we initialise it and just kinda... let it run free?
-(def client (SecretManagerServiceClient/create))
+(def client
+  (try (SecretManagerServiceClient/create)
+       (catch Exception e
+         (do
+           (log/error "Could not create secret client:" e)
+           nil))))
 
 (defn fetch-secret
   "Given a secret version name string, returns the value"
@@ -56,5 +61,9 @@
   ([client]
    ;; If we don't let it sleep a moment, it fails because the library needs to extract its own library
    ;; But it doesn't have a "oh yeah I'll wait a fucking moment and tell you when it's done"
-   (Thread/sleep 1000)
-   (map (partial process-secret client) secret-names)))
+   (if client
+     (do
+       (Thread/sleep 1000)
+       (map (partial process-secret client) secret-names))
+     [] ; return empty collection on failure
+     )))
