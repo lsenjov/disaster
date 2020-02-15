@@ -22,7 +22,7 @@
     :else
     ;; XXX this just does google at the moment
     (let [token (get-in request [:oauth2/access-tokens :google :id-token])
-          endpoint (get-in env [:oauth2 :google :openid-uri])
+          endpoint (get-in env [:oauth2 :google :jwks-uri])
           ;; Unsign
           unsigned-token (try (unsign endpoint token)
                               (catch Exception e
@@ -31,7 +31,7 @@
                                 ))
           ]
       (if unsigned-token
-        (assoc request :oauth2/identity unsigned-token)
+        (assoc-in request [:session :oauth2/identity] unsigned-token)
         request
         ))))
 (defn wrap-get-identity

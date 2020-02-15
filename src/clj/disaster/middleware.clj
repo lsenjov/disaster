@@ -67,11 +67,11 @@
 
 (defn wrap-log [handler identifier]
   (fn [request]
-    (log/info "Input:" identifier)
-    (log/info (dissoc request :body))
+    (log/trace "Input:" identifier)
+    (log/trace (dissoc request :body))
     (let [ret (handler request)]
-      (log/info "Output:" identifier)
-      (log/info (dissoc ret :body))
+      (log/trace "Output:" identifier)
+      (log/trace (dissoc ret :body))
       ret)))
 
 (defn- fix-debug-host [host-string]
@@ -97,6 +97,9 @@
         (update-in [:scheme] fix-debug-scheme)
         handler)))
 
+(defonce *session-store
+  ; 4 hours
+  (ttl-memory-store (* 4 60 60)))
 (defn wrap-base [handler]
   (-> ((:middleware defaults) handler)
       (wrap-log 2)
@@ -108,5 +111,5 @@
         (-> site-defaults
             ;; Set to lax instead of leaving as strict, so oauth2 works
             (assoc-in [:session :cookie-attrs :same-site] :lax)
-            (assoc-in [:session :store] (ttl-memory-store (* 60 30)))))
+            (assoc-in [:session :store] *session-store)))
       wrap-internal-error))
