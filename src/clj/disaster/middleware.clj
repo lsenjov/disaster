@@ -18,7 +18,8 @@
             [buddy.auth :refer [authenticated?]]
     [buddy.auth.backends.session :refer [session-backend]]))
 
-(defn wrap-internal-error [handler]
+(defn wrap-internal-error
+  [handler]
   (fn [req]
     (try
       (handler req)
@@ -28,7 +29,8 @@
                      :title "Something very bad has happened!"
                      :message "We've dispatched a team of highly trained gnomes to take care of the problem."})))))
 
-(defn wrap-csrf [handler]
+(defn wrap-csrf
+  [handler]
   (wrap-anti-forgery
     handler
     {:error-response
@@ -37,35 +39,41 @@
         :title "Invalid anti-forgery token"})}))
 
 
-(defn wrap-formats [handler]
+(defn wrap-formats
+  [handler]
   (let [wrapped (-> handler wrap-params (wrap-format formats/instance))]
     (fn [request]
       ;; disable wrap-formats for websockets
       ;; since they're not compatible with this middleware
       ((if (:websocket? request) handler wrapped) request))))
 
-(defn on-error [request response]
+(defn on-error
+  [request response]
   (error-page
     {:status 403
      :title (str "Access to " (:uri request) " is not authorized")}))
 
-(defn wrap-restricted [handler]
+(defn wrap-restricted
+  [handler]
   (restrict handler {:handler authenticated?
                      :on-error on-error}))
 
-(defn wrap-oauth2 [handler]
+(defn wrap-oauth2
+  [handler]
   "Add oauth2 routes"
   (-> handler
       (wrap-get-identity)
       (ring.middleware.oauth2/wrap-oauth2 (:oauth2 env))))
 
-(defn wrap-auth [handler]
+(defn wrap-auth
+  [handler]
   (let [backend (session-backend)]
     (-> handler
         (wrap-authentication backend)
         (wrap-authorization backend))))
 
-(defn wrap-log [handler identifier]
+(defn wrap-log
+  [handler identifier]
   (fn [request]
     (log/trace "Input:" identifier)
     (log/trace (dissoc request :body))
@@ -103,7 +111,8 @@
 (defonce *session-store
   ; 4 hours
   (ttl-memory-store (* 4 60 60)))
-(defn wrap-base [handler]
+(defn wrap-base
+  [handler]
   (-> ((:middleware defaults) handler)
       (wrap-log 2)
       wrap-auth
