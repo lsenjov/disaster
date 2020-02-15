@@ -81,7 +81,8 @@
     (-> host-string
         (clojure.string/split #":" 2)
         first)))
-(defn- fix-debug-scheme [scheme-kw]
+(defn- fix-debug-scheme
+  [scheme-kw]
   (if (= :http scheme-kw)
     :https
     scheme-kw))
