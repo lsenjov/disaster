@@ -31,6 +31,7 @@
                  [org.clojure/algo.generic "0.1.3"]
                  [org.clojure/clojure "1.10.1"]
                  [org.clojure/clojurescript "1.10.597" :scope "provided"]
+                 [org.clojure/core.async "0.4.474"]
                  [org.clojure/tools.cli "0.4.2"]
                  [org.clojure/tools.logging "0.5.0"]
                  [org.webjars.npm/bulma "0.8.0"]
@@ -43,6 +44,18 @@
                  [ring/ring-core "1.8.0"]
                  [ring/ring-defaults "0.3.2"]
                  [selmer "1.12.18"]
+
+                 ;; Nested deps
+                 [com.fasterxml.jackson.core/jackson-core "2.10.1"]
+                 [com.fasterxml.jackson.core/jackson-databind "2.10.0"]
+                 [com.fasterxml.jackson.core/jackson-annotations "2.10.0"]
+                 [org.apache.httpcomponents/httpcore "4.4.12"]
+                 [org.apache.httpcomponents/httpclient "4.5.10"]
+                 [org.slf4j/slf4j-api "1.7.29"]
+                 [args4j "2.33"]
+                 [borkdude/edamame "0.0.7"]
+                 [clj-time "0.14.3"]
+                 [joda-time "2.9.9"]
                  
                  ;; JWT deps
                  [invetica/uri "0.5.0"]
