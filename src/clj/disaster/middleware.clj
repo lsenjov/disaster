@@ -74,8 +74,9 @@
       (log/trace (dissoc ret :body))
       ret)))
 
-(defn- fix-debug-host [host-string]
+(defn- fix-debug-host
   "Takes a host string, either like localhost:3000, example.com, or example.com:3000, and strips out the :3000 (or other port) if it exists"
+  [host-string]
   (when host-string
     (-> host-string
         (clojure.string/split #":" 2)
@@ -88,9 +89,10 @@
   (fix-debug-host "localhost:3000")
   (fix-debug-host "example.com")
   (fix-debug-host nil))
-(defn wrap-fix-debug-host [handler]
+(defn wrap-fix-debug-host
   "Because of proxying, the host header is likely to get changed to domain.com:3000, especially if localhost.
   We check that header, and update it accordingly"
+  [handler]
   (fn [request]
     (-> request
         (update-in [:headers "host"] fix-debug-host)
@@ -105,7 +107,7 @@
       (wrap-log 2)
       wrap-auth
       wrap-oauth2
-      wrap-fix-debug-host
+      wrap-fix-debug-host ;; Makes the oauth2 endpoints work, instead of thinking they're actually at localhost:3000
       (wrap-log 1)
       (wrap-defaults
         (-> site-defaults
