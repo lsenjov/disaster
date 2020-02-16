@@ -1,4 +1,4 @@
-FROM openjdk:11-alpine
+FROM openjdk:11-slim
 
 COPY target/uberjar/disaster.jar /disaster/app.jar
 
