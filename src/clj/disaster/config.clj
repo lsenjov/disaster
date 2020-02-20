@@ -1,19 +1,17 @@
 (ns disaster.config
   (:require
+    [disaster.config.gcloud :refer [get-all-config-secrets]]
     [cprop.core :refer [load-config]]
     [cprop.source :as source]
     [mount.core :refer [args defstate]]))
-
-;; Kinda dirty, but we need to make sure test-config.edn exists if it doesn't
-(try (slurp "test-config.edn")
-     (catch Exception e
-       (spit "test-config.edn"
-             (pr-str {}))))
 
 (defstate env
   :start
   (load-config
     :merge
-    [(args)
-     (source/from-system-props)
-     (source/from-env)]))
+    (concat
+      [(args)
+       (source/from-system-props)
+       (source/from-env)]
+      ;; Go get the secrets from gcloud store: if able
+      (get-all-config-secrets))))
